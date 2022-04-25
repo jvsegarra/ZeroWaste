@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  zw-db:
+    image: postgres:14.1-alpine
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - '5438:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+
+#  migrate:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    command: ['/bin/sh', '-c', './scripts/migrate.sh']
+#    volumes:
+#      - ./alembic.ini:/app/alembic.ini
+#    env_file:
+#      - ./.env
+#    depends_on:
+#      - zw-db
+
+  zw-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+      - ./migrations:/app/migrations
+      - ./alembic.ini:/app/alembic.ini
+      - ./htmlcov:/app/htmlcov
+      - type: bind
+        source: .
+        target: /app
+    env_file:
+      - ./.env
+    depends_on:
+      - zw-db
+#      - migrate
+
+volumes:
+  db:
+    driver: local
