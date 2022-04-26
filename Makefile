@@ -11,7 +11,7 @@ shell:
 	docker exec -i -t zerowaste_zw-api_1 bash
 
 dbshell:
-	docker-compose exec db psql -U zw # \q + enter to exit psql
+	docker-compose exec zw-db psql -U zw # \q + enter to exit psql
 
 new_migration:
 	docker-compose exec zw-api alembic revision -m "$(name)"
@@ -30,7 +30,13 @@ test:
 	fi
 
 unit_test:
-	docker-compose exec zw-api pytest tests/app/
+	docker-compose exec zw-api pytest tests/unit/
 
 integration_test:
 	docker-compose exec zw-api pytest tests/integration/
+
+coverage:
+	docker-compose exec zw-api pytest --cov=app --cov-report html tests/
+
+format:
+	docker-compose exec zw-api black --config=./pyproject.toml .

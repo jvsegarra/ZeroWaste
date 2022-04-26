@@ -7,14 +7,44 @@ authors = ["jv <jvsegarra@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.27.1"
-fastapi = "^0.75.2"
+fastapi = "^0.77.1"
 uvicorn = "^0.17.6"
 alembic = "^1.7.7"
 pydantic = "^1.9.0"
+asyncpg = "^0.25.0"
+python-dotenv = "^0.20.0"
+psycopg2-binary = "^2.9.3"
+databases = {extras = ["asyncpg"], version = "^0.5.5"}
+python-json-logger = "^2.0.2"
+black = "^22.3.0"
+pre-commit = "^2.19.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
+pytest-asyncio = "^0.18.3"
+coverage = {extras = ["toml"], version = "^6.3.2"}
+pytest-cov = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+# pytest settings
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+testpaths = [
+    "tests",
+]
+
+# coverage settings
+[tool.coverage.run]
+omit = [".*", "*/site-packages/*"]
+
+[tool.coverage.report]
+fail_under = 100
+
+# black formatter settings
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+include = "app/|config/|tests/|main.py"
