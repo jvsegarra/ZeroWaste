@@ -1,5 +1,10 @@
 # Intellij
-.idea
+/.idea
 *.iml
 
+/venv
+
 .env
+./htmlcov
+
+__pycache__/
