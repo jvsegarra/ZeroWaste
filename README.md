@@ -6,8 +6,8 @@ Deliver leftovers from stores to social shelters
 Project following the guidelines of Domain Driven Design
 
 ## Open the project initially in 'dev' environment
-* run `git clone `
-* create a `.env` file in the root folder copying the `.env.template` file in the repository.
+* run `git clone git@github.com:jvsegarra/ZeroWaste.git`
+* create a `.env` file in the root folder copying the content from `.env.template` file in the repository.
 * in a terminal, from the root folder run `make run`
 * open `http://127.0.0.1:8000/docs` to see the apidoc
 

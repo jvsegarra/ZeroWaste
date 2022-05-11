@@ -17,3 +17,7 @@ class BaseEntity:
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
         self.deleted_at = None
+
+    @property
+    def is_deleted(self) -> bool:
+        return self.entity_status == EntityStatus.DELETED

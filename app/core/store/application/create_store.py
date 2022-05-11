@@ -6,7 +6,7 @@ from pydantic.dataclasses import dataclass
 from app.core.shared.value_object.common import EntityId
 from app.core.store.domain.entity.store import Store
 from app.core.store.domain.repository.store_repository import StoreRepository
-from app.core.store.domain.value_object.location import Location
+from app.core.store.domain.value_object.store_value_object import Location
 
 
 @dataclass

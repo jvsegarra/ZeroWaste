@@ -14,6 +14,10 @@ class Settings(BaseSettings):
     db_password: str
     db_url: PostgresDsn
 
+    # OAuth JWT
+    jwt_secret: str
+    access_token_expire_minutes: int
+
     class Config:
         env_file = ".env"
 

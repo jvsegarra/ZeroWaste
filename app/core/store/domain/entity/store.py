@@ -1,6 +1,6 @@
 from app.core.shared.entity.base_entity import BaseEntity
 from app.core.shared.value_object.common import EntityId, EntityStatus
-from app.core.store.domain.value_object.location import Location
+from app.core.store.domain.value_object.store_value_object import Location
 
 
 class Store(BaseEntity):
@@ -20,7 +20,3 @@ class Store(BaseEntity):
         self.name = name
         self.location = location
         self.description = description
-
-    @property
-    def is_deleted(self) -> bool:
-        return self.entity_status == EntityStatus.DELETED

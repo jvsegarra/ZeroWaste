@@ -7,7 +7,7 @@ from app.core.shared.value_object.common import EntityId, EntityStatus
 from app.core.store.application.delete_store import DeleteStoreHandler
 from app.core.store.domain.entity.store import Store
 from app.core.store.domain.repository.store_repository import StoreRepository
-from app.core.store.domain.value_object.location import Location
+from app.core.store.domain.value_object.store_value_object import Location
 
 
 @pytest.mark.asyncio
