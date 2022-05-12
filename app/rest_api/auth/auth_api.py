@@ -21,13 +21,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
     user = await AuthManager(UserRepositoryPostgres()).authenticate_user(email, password)
 
-    if not user:
-        raise HTTPException(
-            status_code=HTTPStatus.UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
     return {
         "access_token": TokenManager.create_access_token(access_token_sub=user.email),
         "token_type": "bearer",

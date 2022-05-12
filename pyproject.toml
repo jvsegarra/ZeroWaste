@@ -42,7 +42,7 @@ testpaths = [
 
 # coverage settings
 [tool.coverage.run]
-omit = [".*", "*/site-packages/*"]
+omit = [".*", "*/site-packages/*", "*/app/di/*"]
 
 [tool.coverage.report]
 fail_under = 100
