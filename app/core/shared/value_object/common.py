@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 from uuid import UUID, uuid4
 
 from pydantic.dataclasses import dataclass
@@ -20,6 +20,6 @@ class EntityId:
         return str(self.id)
 
 
-class EntityStatus(enum.Enum):
+class EntityStatus(Enum):
     ACTIVE = "ACTIVE"
     DELETED = "DELETED"

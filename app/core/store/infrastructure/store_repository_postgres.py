@@ -4,7 +4,7 @@ from databases.backends.postgres import Record
 
 from app.core.shared.value_object.common import EntityId, EntityStatus
 from app.core.store.domain.entity.store import Store
-from app.core.store.domain.value_object.location import Location
+from app.core.store.domain.value_object.store_value_object import Location
 from config.database import database
 
 

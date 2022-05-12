@@ -1,22 +1,21 @@
-from fastapi import APIRouter
 from http import HTTPStatus
 
-from app.core.store.application.create_store import CreateStoreHandler, CreateStoreCommand, LocationCommand
-from app.core.store.infrastructure.store_repository_postgres import StoreRepositoryPostgres
-from app.rest_api.store.api_dto import StoreApiDto, LocationApiDto
-from app.core.store.application.delete_store import DeleteStoreHandler
-from app.core.shared.value_object.common import EntityId
-from app.core.store.application.get_store import GetStoreHandler
+from fastapi import APIRouter, Depends
+from starlette.responses import Response
 
-router = APIRouter(
+from app.core.shared.value_object.common import EntityId
+from app.core.store.application.create_store import CreateStoreCommand, LocationCommand
+from app.di.store import get_create_store_handler, get_get_store_handler, get_delete_store_handler
+from app.rest_api.store.dto import StoreApiDto, LocationApiDto
+
+store_router = APIRouter(
     prefix="/stores",
     tags=["stores"],
 )
 
 
-@router.post("/", status_code=HTTPStatus.CREATED)
-async def create_store(store_request: StoreApiDto):
-    create_store_handler = CreateStoreHandler(StoreRepositoryPostgres())
+@store_router.post("/", status_code=HTTPStatus.CREATED)
+async def create_store(store_request: StoreApiDto, create_store_handler=Depends(get_create_store_handler)):
     store_id = await create_store_handler.handle(
         CreateStoreCommand(
             name=store_request.name,
@@ -28,9 +27,8 @@ async def create_store(store_request: StoreApiDto):
     return {"store_id": store_id.to_str()}
 
 
-@router.get("/{store_id}", response_model=StoreApiDto)
-async def get_store(store_id):
-    get_store_handler = GetStoreHandler(StoreRepositoryPostgres())
+@store_router.get("/{store_id}", response_model=StoreApiDto)
+async def get_store(store_id, get_store_handler=Depends(get_get_store_handler)):
     store = await get_store_handler.handle(EntityId.from_str(store_id))
 
     return StoreApiDto(
@@ -40,7 +38,8 @@ async def get_store(store_id):
     )
 
 
-@router.delete("/{store_id}", status_code=HTTPStatus.NO_CONTENT)
-async def delete_store(store_id):
-    delete_store_handler = DeleteStoreHandler(StoreRepositoryPostgres())
+@store_router.delete("/{store_id}", status_code=HTTPStatus.NO_CONTENT)
+async def delete_store(store_id, delete_store_handler=Depends(get_delete_store_handler)):
     await delete_store_handler.handle(EntityId.from_str(store_id))
+
+    return Response(status_code=HTTPStatus.NO_CONTENT)
