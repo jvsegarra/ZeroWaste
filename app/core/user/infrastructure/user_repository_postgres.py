@@ -1,7 +1,9 @@
 from typing import Optional
 
+from asyncpg import UniqueViolationError
 from databases.backends.postgres import Record
 
+from app.core.shared.exception.base_exceptions import EntityPersistException
 from app.core.shared.value_object.common import EntityId, EntityStatus
 from app.core.user.domain.entity.user import User
 from app.core.user.domain.value_object.user_value_object import PersonalInfo, UserType
@@ -15,10 +17,15 @@ class UserRepositoryPostgres:
         VALUES (:id, :email, :hashed_password, :first_name, :last_name, :user_type)
         """
 
-        await database.execute(
-            query=query,
-            values=self._map_to_dict(user),
-        )
+        try:
+            await database.execute(
+                query=query,
+                values=self._map_to_dict(user),
+            )
+        except UniqueViolationError as e:
+            raise EntityPersistException(f"User with email {user.email} already exists in DB") from e
+        except Exception as e:
+            raise EntityPersistException(f"Error persisting User in DB") from e
 
     async def get_user(self, user_id: EntityId) -> Optional[User]:
         query = "SELECT * FROM users WHERE id = :id"

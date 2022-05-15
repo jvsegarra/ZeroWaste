@@ -2,6 +2,7 @@ from typing import Optional
 
 from databases.backends.postgres import Record
 
+from app.core.shared.exception.base_exceptions import EntityPersistException
 from app.core.shared.value_object.common import EntityId, EntityStatus
 from app.core.store.domain.entity.store import Store
 from app.core.store.domain.value_object.store_value_object import Location
@@ -15,10 +16,13 @@ class StoreRepositoryPostgres:
         VALUES (:id, :name, :location_longitude, :location_latitude, :description)
         """
 
-        await database.execute(
-            query=query,
-            values=self._map_to_dict(store),
-        )
+        try:
+            await database.execute(
+                query=query,
+                values=self._map_to_dict(store),
+            )
+        except Exception as e:
+            raise EntityPersistException(f"Error persisting Store in DB") from e
 
     async def get_store(self, store_id: EntityId) -> Optional[Store]:
         query = "SELECT * FROM stores WHERE id = :id"

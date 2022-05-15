@@ -1,9 +1,17 @@
 import uvicorn
 from fastapi import FastAPI, APIRouter
 
-from app.core.shared.exception.base_exceptions import EntityNotFoundException, InvalidStatusException
+from app.core.shared.exception.base_exceptions import (
+    EntityNotFoundException,
+    InvalidStatusException,
+    EntityPersistException,
+)
 from app.rest_api.auth.auth_api import auth_router
-from app.rest_api.exception_handlers import entity_not_found_exception_handler, invalid_status_exception_handler
+from app.rest_api.exception_handlers import (
+    entity_not_found_exception_handler,
+    invalid_status_exception_handler,
+    entity_persist_exception_handler,
+)
 from app.rest_api.store.store_api import store_router
 from app.rest_api.user.user_api import user_router
 from config.database import database
@@ -36,6 +44,7 @@ app.include_router(api_router, prefix=f"{API_PREFIX}/{API_VERSION}")
 # Exception handlers
 app.add_exception_handler(EntityNotFoundException, entity_not_found_exception_handler)
 app.add_exception_handler(InvalidStatusException, invalid_status_exception_handler)
+app.add_exception_handler(EntityPersistException, entity_persist_exception_handler)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

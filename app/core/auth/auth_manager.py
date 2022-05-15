@@ -1,10 +1,9 @@
 from datetime import timedelta, datetime
-from http import HTTPStatus
 
 import jwt
-from fastapi import HTTPException
 
 from app.core.auth.password_manager import PasswordManager
+from app.core.shared.exception.base_exceptions import AuthException
 from app.core.user.domain.entity.user import User
 from app.core.user.domain.repository.user_repository import UserRepository
 from config.settings import get_settings
@@ -23,21 +22,13 @@ class AuthManager:
     async def authenticate_user(self, email: str, password: str):
         user = await self.user_repository.get_user_by_email(email)
 
-        # throw exceptions
-        if not user:
-            return False
-
-        if not PasswordManager.verify_password(password, user.hashed_password):
-            return False
+        if not user or not PasswordManager.verify_password(password, user.hashed_password):
+            raise AuthException("Incorrect username or password")
 
         return user
 
     async def get_current_user(self, token: str) -> User:
-        credentials_error = HTTPException(
-            status_code=HTTPStatus.UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        credentials_error = AuthException("Could not validate credentials")
 
         try:
             payload = jwt.decode(token, settings.jwt_secret, algorithms=[ALGORITHM])
